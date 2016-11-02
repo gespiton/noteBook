@@ -126,10 +126,6 @@ namespace diaryBook
             textIn.Focus();
         }
 
-        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void saveButton_Click(object sender, EventArgs e)
         {
