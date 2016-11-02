@@ -110,6 +110,8 @@ namespace diaryBook
         }
         public void fillGap(List<Point> path)
         {
+
+
             List<Tuple<int, int>> target = new List<Tuple<int, int>>();
             List<Point> final = path.ConvertAll(p => new Point(p.X,p.Y));
 
