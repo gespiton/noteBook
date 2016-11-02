@@ -66,7 +66,7 @@ namespace diaryBook
         public Bitmap drawing { get; set; } = null;
         public Brush brush { get; set; } = Brushes.Blue;
         public Pen myPen { get; set; } = Pens.Blue;
-        public List<Point> path { get; set; } = new List<Point>();
+        public List<PointF> path { get; set; } = new List<PointF>();
 
         public bool penMode { get; set; } = true;
         private void panel1_MouseMove(object sender, MouseEventArgs e)
@@ -94,26 +94,23 @@ namespace diaryBook
                     fillGap(path);
                     foreach (var p in path)
                     {
-                        g.FillEllipse(brush, p.X - 2, p.Y - 2, 4, 4);
+                        Console.WriteLine(p.X+"   "+p.Y);
+                        g.FillEllipse(brush, p.X, p.Y, 4, 4);
                     }
-                    //g.FillEllipse(brush, e.X - 2, e.Y - 2, 4, 4);
+                    Console.WriteLine("=========================");
                 }
 
-                // keep the path small
                 path.RemoveRange(0, path.Count - 2);
-                //var buf = path[path.Count - 1];
-                //path.Clear();
-                //path.Add(buf);
 
                 board.CreateGraphics().DrawImage(drawing, new Point(0, 0));
             }
         }
-        public void fillGap(List<Point> path)
+        public void fillGap(List<PointF> path)
         {
 
 
-            List<Tuple<int, int>> target = new List<Tuple<int, int>>();
-            List<Point> final = path.ConvertAll(p => new Point(p.X,p.Y));
+            List<Tuple<float, float>> target = new List<Tuple<float, float>>();
+            List<PointF> final = path.ConvertAll(p => new PointF(p.X,p.Y));
 
             int total = path.Count - 2;
             int offset = 0;
@@ -121,13 +118,14 @@ namespace diaryBook
             {
                 target.Clear();
                 var cur = final[i];
-                var vec = new Tuple<int ,int>(final[i + 1].X - cur.X, final[i + 1].Y - cur.Y);
+                var vec = new Tuple<float ,float>(final[i + 1].X - cur.X, final[i + 1].Y - cur.Y);
                 //var distance = next.
-                divide(new Tuple<int, int>(cur.X, cur.Y), vec.Item1, vec.Item2, target);
-                target.Sort((IComparer<Tuple<int, int>>)new sorter());
+                divide(new Tuple<float, float>(cur.X, cur.Y), vec.Item1, vec.Item2, target);
+                target.Sort((IComparer<Tuple<float, float>>)new sorter());
                 foreach (var p in target)
                 {
-                    path.Insert(i+offset++, new Point(p.Item1, p.Item2));
+                    //Console.WriteLine(p.Item1+"  "+p.Item2);
+                    path.Insert(i+offset++, new PointF(p.Item1, p.Item2));
                 }
             }
             //foreach (var item in target)
@@ -138,24 +136,24 @@ namespace diaryBook
         }
 
         // sorting method
-        public class sorter : IComparer<Tuple<int, int>>
+        public class sorter : IComparer<Tuple<float, float>>
         {
-            public int Compare(Tuple<int, int> x, Tuple<int, int> y)
+            public int Compare(Tuple<float,float> x, Tuple<float, float> y)
             {
                 return x.Item1.CompareTo(y.Item1);
             }
         }
-        public void divide(Tuple<int,int> ori, int midX, int midY,List<Tuple<int,int>> target)
+        public void divide(Tuple<float,float> ori, float midX, float midY,List<Tuple<float,float>> target)
         {
 
-            if (Math.Abs( midX) < 1 && Math.Abs( midY) < 1)
+            if (Math.Abs( midX) < 3 && Math.Abs( midY) < 3)
                 return;
 
-            int X = midX / 2;
-            int Y = midY / 2;
-            target.Add(new Tuple<int, int>(ori.Item1 + X, ori.Item2 + Y));
+            float X = midX / 2;
+            float Y = midY / 2;
+            target.Add(new Tuple<float, float>(ori.Item1 + X, ori.Item2 + Y));
             divide(ori, X, Y,target);
-            divide(new Tuple<int, int>(ori.Item1 + X, ori.Item2 + Y), X, Y, target);
+            divide(new Tuple<float, float>(ori.Item1 + X, ori.Item2 + Y), X, Y, target);
 
         }
 
