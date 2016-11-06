@@ -146,7 +146,7 @@ namespace diaryBook
         public void divide(Tuple<float,float> ori, float midX, float midY,List<Tuple<float,float>> target)
         {
 
-            if (Math.Abs( midX) < 3 && Math.Abs( midY) < 3)
+            if (Math.Abs( midX) < 2 && Math.Abs( midY) < 2)
                 return;
 
             float X = midX / 2;
@@ -164,6 +164,7 @@ namespace diaryBook
             if (colorPic.ShowDialog() == DialogResult.OK)
             {
                 myPen = new Pen(colorPic.Color);
+                brush = new SolidBrush(colorPic.Color);
             }
         }
         public SaveFileDialog saver { get; set; } = new SaveFileDialog();
@@ -197,11 +198,13 @@ namespace diaryBook
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
             penMode = true;
+            sizeB.Enabled = true;
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             penMode = false;
+            sizeB.Enabled = false;
         }
 
         private void board_Paint(object sender, PaintEventArgs e)
@@ -231,6 +234,24 @@ namespace diaryBook
 
             //    board.CreateGraphics().DrawImage(drawing, new Point(0, 0));
             //}
+        }
+
+        bool small = true;
+        private void DrawForm_SizeChanged(object sender, EventArgs e)
+        {
+            if (small)
+            {
+                Bitmap buf = new Bitmap(board.Size.Width, board.Size.Height);
+                Graphics g = Graphics.FromImage(buf);
+                g.DrawImage(drawing, new Point(0, 0));
+                board.CreateGraphics().DrawImage(buf, new Point(0, 0));
+                drawing = buf;
+                small = false;
+            }
+            else
+            {
+                small = true;
+            }
         }
     }
 }

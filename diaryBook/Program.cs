@@ -16,7 +16,7 @@ namespace diaryBook
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new DrawForm());
+            Application.Run(new startForm());
         }
     }
 }

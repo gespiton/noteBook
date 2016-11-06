@@ -13,7 +13,7 @@ namespace diaryBook
     public partial class textEdi : Form
     {
         public SaveFileDialog saveFile1 { get; set; }
-        public FontDialog font { get; set; }
+        public FontDialog font { get; set; } 
         public ColorDialog colorPicker { get; set; }
         public bool stared { get; set; } = true;
         public textEdi()
@@ -21,15 +21,15 @@ namespace diaryBook
             InitializeComponent();
             // add font to fontCombox
             //List<string> fonts = new List<string>();
-            var fonts = comboBox1.Items;
+            //var fonts = comboBox1.Items;
             font = new FontDialog();
             colorPicker = new ColorDialog();
             saveFile1 = new SaveFileDialog();
-            foreach (FontFamily font in System.Drawing.FontFamily.Families)
-            {
-                fonts.Add(font.Name);
-            }
-            comboBox1.SelectedIndex = 0;
+            //foreach (FontFamily font in System.Drawing.FontFamily.Families)
+            //{
+            //    fonts.Add(font.Name);
+            //}
+            //comboBox1.SelectedIndex = 0;
             //textIn.Font = new Font(textIn.Font.Name, 15, FontStyle.Regular);
             textIn.SelectionFont = font.Font;
             //FontDialog myFontDialog = new FontDialog();
@@ -50,7 +50,7 @@ namespace diaryBook
         private void font_cBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             System.Drawing.FontConverter buf = new FontConverter();
-            textIn.Font = (System.Drawing.Font)(buf.ConvertFromString(comboBox1.SelectedText));
+            //textIn.Font = (System.Drawing.Font)(buf.ConvertFromString(comboBox1.SelectedText));
         }
 
         private void fontButton_Click(object sender, EventArgs e)
@@ -89,39 +89,57 @@ namespace diaryBook
             //textIn.Refresh();
         }
 
-        private void underlineButton_Click(object sender, EventArgs e)
+        private void underline_Click(object sender, EventArgs e)
         {
             if((font.Font.Style & FontStyle.Underline) != 0)
             {
                 font.Font = new Font(font.Font.Name, font.Font.Size,font.Font.Style-4);
                 textIn.SelectionFont = font.Font;
-                comboBox1.Text = ((int)font.Font.Style).ToString();
+                //comboBox1.Text = ((int)font.Font.Style).ToString();
 
             }
             else
             {
                 font.Font = new Font(font.Font.Name, font.Font.Size,  font.Font.Style+4);
                 textIn.SelectionFont = font.Font;
-                comboBox1.Text = ((int)font.Font.Style).ToString();
+                //comboBox1.Text = ((int)font.Font.Style).ToString();
             }
             textIn.Focus();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void strikeout_click(object sender, EventArgs e)
         {
             //var pos = textIn.SelectionStart;
             if ((font.Font.Style & FontStyle.Strikeout) != 0)
             {
                 font.Font = new Font(font.Font.Name, font.Font.Size, font.Font.Style - 8);
                 textIn.SelectionFont = font.Font;
-                comboBox1.Text = ((int)font.Font.Style).ToString();
+                //comboBox1.Text = ((int)font.Font.Style).ToString();
                 
             }
             else
             {
                 font.Font = new Font(font.Font.Name, font.Font.Size, font.Font.Style + 8);
                 textIn.SelectionFont = font.Font;
-                comboBox1.Text = ((int)font.Font.Style).ToString();
+                //comboBox1.Text = ((int)font.Font.Style).ToString();
+            }
+            textIn.Focus();
+        }
+        private void bold_click(object sender, EventArgs e)
+        {
+            //var pos = textIn.SelectionStart;
+            if ((font.Font.Style & FontStyle.Bold) != 0)
+            {
+                font.Font = new Font(font.Font.Name, font.Font.Size, font.Font.Style - 1);
+                textIn.SelectionFont = font.Font;
+                //comboBox1.Text = ((int)font.Font.Style).ToString();
+
+            }
+            else
+            {
+                font.Font = new Font(font.Font.Name, font.Font.Size, font.Font.Style + 1);
+                textIn.SelectionFont = font.Font;
+                //comboBox1.Text = ((int)font.Font.Style).ToString();
             }
             textIn.Focus();
         }
@@ -164,7 +182,7 @@ namespace diaryBook
                 this.Text = this.Text + "*";
                 stared = true;
             }
-            comboBox1.Text = textIn.SelectionStart.ToString();
+            //comboBox1.Text = textIn.SelectionStart.ToString();
         }
 
         private void colorButton_Click(object sender, EventArgs e)
@@ -174,6 +192,43 @@ namespace diaryBook
                 textIn.SelectionColor = colorPicker.Color;
                 textIn.Focus();
             }
+        }
+
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        public bool canClose { get; set; } = true;
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            if (canClose)
+                this.Close();
+        }
+
+
+        public bool move { get; set; }
+        public Point mousePos { get; set; }
+        private void headerPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            move = true;
+            mousePos = new Point(e.X, e.Y);
+            Console.WriteLine(mousePos.X + "---" + mousePos.Y);
+        }
+
+        private void headerPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (move)
+            {
+                var p = PointToScreen(e.Location);
+                Console.WriteLine(p.X + "  " + p.Y);
+                this.Location = new Point(p.X - mousePos.X, p.Y - mousePos.Y);
+            }
+        }
+
+        private void headerPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            move = false;
         }
     }
 }
