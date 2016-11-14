@@ -1,6 +1,6 @@
 ﻿namespace diaryBook
 {
-    partial class textEdi
+    partial class TextEdi
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(textEdi));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TextEdi));
             this.textIn = new System.Windows.Forms.RichTextBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
@@ -39,14 +39,13 @@
             this.strikeButton = new System.Windows.Forms.ToolStripButton();
             this.saveButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripLabel1 = new System.Windows.Forms.ToolStripLabel();
-            this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // textIn
             // 
-            this.textIn.BackColor = System.Drawing.Color.White;
+            this.textIn.BackColor = System.Drawing.Color.WhiteSmoke;
             this.textIn.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textIn.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textIn.Location = new System.Drawing.Point(5, 49);
@@ -89,8 +88,7 @@
             this.boldButton,
             this.strikeButton,
             this.saveButton,
-            this.toolStripLabel1,
-            this.toolStripButton1});
+            this.toolStripLabel1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(850, 44);
@@ -158,35 +156,25 @@
             // toolStripLabel1
             // 
             this.toolStripLabel1.Name = "toolStripLabel1";
-            this.toolStripLabel1.Size = new System.Drawing.Size(485, 41);
+            this.toolStripLabel1.Size = new System.Drawing.Size(501, 41);
             this.toolStripLabel1.Text = "                                                                                 " +
-    "                                      ";
+    "                                          ";
             this.toolStripLabel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.headerPanel_MouseDown);
             this.toolStripLabel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.headerPanel_MouseMove);
             this.toolStripLabel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.headerPanel_MouseUp);
             // 
-            // toolStripButton1
-            // 
-            this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-            this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton1.Name = "toolStripButton1";
-            this.toolStripButton1.Size = new System.Drawing.Size(34, 41);
-            this.toolStripButton1.Text = "toolStripButton1";
-            this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
-            // 
-            // textEdi
+            // TextEdi
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
             this.ClientSize = new System.Drawing.Size(850, 699);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(850, 699);
-            this.Name = "textEdi";
+            this.Name = "TextEdi";
             this.Text = "Untitled*";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TextEdi_FormClosing);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
@@ -206,6 +194,5 @@
         private System.Windows.Forms.ToolStripButton strikeButton;
         private System.Windows.Forms.ToolStripButton fontButton;
         private System.Windows.Forms.ToolStripLabel toolStripLabel1;
-        private System.Windows.Forms.ToolStripButton toolStripButton1;
     }
 }

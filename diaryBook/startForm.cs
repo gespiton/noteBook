@@ -24,81 +24,75 @@ namespace diaryBook
             InitializeComponent();
             defaultFolder = @"D:\noteBook\";
             data = @"D:\noteBook\_data";
-            tempData.init(data);
-            loadData();
+            MessageBox.Show(tempData.store.Count.ToString());
+            tempData.init(defaultFolder);
+            loadData();                                        // initialize tempData.store
+            initializeList();                                  // build objlistview        
         }
-        private void loadData()
+        private void loadData()       
         {
             if (File.Exists(data))
             {
-                //var buf = DeSerializeObject< List<Tuple<DateTime,string>> > (data);
-                
                 // generate store                
                 try
                 {
                     string s = File.ReadAllText(data);
                     //var a = JsonConvert.DeserializeObject(data);
-                    var buf = JsonConvert.DeserializeObject<List<Tuple<DateTime, string>>>(s);
+                    var buf = JsonConvert.DeserializeObject<List<displayItem>>(s);
                     tempData.store = buf;
 
                 }catch(Exception ex)
                 {
-                    tempData.store = new List<Tuple<DateTime, string>>();
+                    //tempData.store = new List<Tuple<DateTime, string>>();
                 }
 
-                // generate dic
-                foreach(var i in tempData.store)
-                {
-                    
-                }
-
-
-                //if (tempData.myData != null)
+                //foreach(var i in tempData.store)
                 //{
-                //    MessageBox.Show(tempData.myData.Count.ToString());
-                    
-                //    foreach (var item in tempData.store)
-                //    {
-                //        MessageBox.Show(item.Item1.ToString());
-                //    }
+                //    MessageBox.Show(i.Key.ToString());
                 //}
-
-
+                
             }
             else
             {
                 //MessageBox.Show("didn't find data");
                 Directory.CreateDirectory(defaultFolder);
                 File.Create(data);
+                tempData.store = null; 
                 /// didn't find the stored data 
-                tempData.init(data);
-                          
             }
         }
 
-
-        private void siderHeadPanel_Paint(object sender, PaintEventArgs e)
+        private void initializeList()
         {
-
-        }
-
-        private void startForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void colse_button(object sender, EventArgs e)
-        {
-            tempData.add(DateTime.Now, "haha");
-            var s = JsonConvert.SerializeObject(tempData.store);
-            MessageBox.Show(s);
-            using (StreamWriter outputFile = new StreamWriter(data))
+            this.olvColumn1.ImageGetter = delegate (object src)
             {
-                outputFile.WriteLine(s);
-            }
-            //SerializeObject<List<Tuple<DateTime, string>>>(tempData.store, data);
-            this.Close();
+                displayItem buf = (displayItem)src;
+                if (buf.type == "text")
+                {
+                    return "text";
+                }
+                else
+                {
+                    return "drawing";
+                }
+            };
+            this.olvColumn1.GroupKeyGetter = (object src) =>
+            {
+                displayItem buf = (displayItem)src;
+                return buf.time.GetDateTimeFormats('d')[0];
+            };
+
+            this.fileList.SetObjects(tempData.store);
         }
+
+
+        public void updateObjList()
+        {
+            this.fileList.SetObjects(tempData.store);
+        }
+
+
+
 
         #region move
         public bool move { get; set; } = false;
@@ -124,7 +118,7 @@ namespace diaryBook
         }
         #endregion
 
-        #region close
+        #region close button
         private void closeButton_MouseEnter(object sender, EventArgs e)
         {
             closeButton.BackColor = Color.FromArgb(80, 255, 50, 0);
@@ -132,6 +126,18 @@ namespace diaryBook
         private void closeButton_MouseLeave(object sender, EventArgs e)
         {
             closeButton.BackColor = Color.WhiteSmoke;
+        }
+        private void colse_button(object sender, EventArgs e)
+        {
+            //tempData.add(DateTime.Now, "haha");
+            //var s = JsonConvert.SerializeObject(tempData.oldStore);
+            //MessageBox.Show(s);
+            //using (StreamWriter outputFile = new StreamWriter(data))
+            //{
+            //    outputFile.WriteLine(s);
+            //}
+            //SerializeObject<List<Tuple<DateTime, string>>>(tempData.store, data);
+            this.Close();
         }
         #endregion
 
@@ -144,6 +150,15 @@ namespace diaryBook
         private void newPanel_MouseLeave(object sender, EventArgs e)
         {
             newPanel.BackColor = Color.FromArgb(100, 22, 51, 72);
+        }
+
+        private void drawPanel_MouseEnter(object sender,EventArgs e)
+        {
+            drawPanel.BackColor= Color.FromArgb(100, 79, 92, 130);
+        }
+        private void drawPanel_MouseLeave(object sender, EventArgs e)
+        {
+            drawPanel.BackColor = Color.FromArgb(100, 22, 51, 72);
         }
 
         #endregion
@@ -225,23 +240,48 @@ namespace diaryBook
         }
         #endregion
 
-        #region temp data cross forms
-        class tempData
+        #region new file
+        private void newFile(object o,EventArgs e)
         {
-            public static storeData myData = new storeData();
-            public static string dataPath { get; set; }
-            public static void init(string path)
-            {
-                myData = new storeData();
-                dataPath = path;
-            }
-            public static List<Tuple<DateTime, string>> store = new List<Tuple<DateTime, string>>();
-            public static void add (DateTime t,string s)
-            {
-                store.Add(new Tuple<DateTime, string>(t, s));
-            }
-            public Dictionary<string, DateTime> buf { get; set; } = new Dictionary<string, DateTime>();
+            TextEdi textEdi = new TextEdi();
+            textEdi.Owner = this;
+            textEdi.Show();
+            newPanel.BackColor = Color.FromArgb(100, 22, 51, 72);
         }
+        private void newDrawing(object o, EventArgs e)
+        {
+            DrawForm drawing = new DrawForm();
+            drawing.Owner = this;
+            drawing.Show();
+            drawPanel.BackColor = Color.FromArgb(100, 22, 51, 72);
+        }
+
+
+
         #endregion
+
+        private void fileList_DoubleClick(object sender, EventArgs e)
+        {
+            MessageBox.Show(sender.ToString());
+        }
+
+        private void fileList_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            //var item = fileList.GetItemAt(e.X, e.Y);
+            var item=fileList.GetItemAt(e.X, e.Y);
+            //MessageBox.Show(fileList.Items.IndexOf(item).ToString());
+            int index = fileList.Items.IndexOf(item);
+            //string fileName = item.SubItems[0].Text.Substring(item.SubItems[0].Text.LastIndexOf('/') + 1);
+            //foreach (var i in item.SubItems)
+            //{
+            //MessageBox.Show(i.ToString());
+            //}
+
+            TextEdi textEdi = new TextEdi(tempData.store[index]);
+            textEdi.Owner = this;
+            textEdi.Show();
+        }
+
     }
+
 }

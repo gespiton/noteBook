@@ -68,6 +68,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="displayItem.cs" />
     <Compile Include="main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,11 +83,12 @@
     <Compile Include="DrawForm.Designer.cs">
       <DependentUpon>DrawForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="textEdi.cs">
+    <Compile Include="tempData.cs" />
+    <Compile Include="TextEdi.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="textEdi.Designer.cs">
-      <DependentUpon>textEdi.cs</DependentUpon>
+    <Compile Include="TextEdi.Designer.cs">
+      <DependentUpon>TextEdi.cs</DependentUpon>
     </Compile>
     <Compile Include="startForm.cs">
       <SubType>Form</SubType>
@@ -109,8 +111,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="textEdi.resx">
-      <DependentUpon>textEdi.cs</DependentUpon>
+    <EmbeddedResource Include="TextEdi.resx">
+      <DependentUpon>TextEdi.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="startForm.resx">
       <DependentUpon>startForm.cs</DependentUpon>
@@ -128,6 +130,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\c#\ObjectListViewFull-2.9.1\ObjectListViewDemo\ObjectListView\ObjectListView2012.csproj">
+      <Project>{18feda0c-d147-4286-b39a-01204808106a}</Project>
+      <Name>ObjectListView2012</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -12,13 +12,20 @@ namespace diaryBook
 {
     public partial class DrawForm : Form
     {
+        private displayItem thisFile;
+
         public DrawForm()
         {
             InitializeComponent();
+            init();
+        }
+
+        private void init()
+        {
             drawing = new Bitmap(board.Width, board.Height);
             this.Text = "Untiled*";
-
         }
+
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
@@ -46,6 +53,9 @@ namespace diaryBook
             //panel1.CreateGraphics().DrawRectangle(myPen, 0, 0, 300, 300);
         }
 
+
+
+        #region drawing
         public bool canDraw { get; set; } = false;
         private void panel1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -107,8 +117,6 @@ namespace diaryBook
         }
         public void fillGap(List<PointF> path)
         {
-
-
             List<Tuple<float, float>> target = new List<Tuple<float, float>>();
             List<PointF> final = path.ConvertAll(p => new PointF(p.X,p.Y));
 
@@ -128,15 +136,10 @@ namespace diaryBook
                     path.Insert(i+offset++, new PointF(p.Item1, p.Item2));
                 }
             }
-            //foreach (var item in target)
-            //{
-            //    Console.WriteLine(item.Item1 + "  " + item.Item2);
-            //}
-
         }
 
         // sorting method
-        public class sorter : IComparer<Tuple<float, float>>
+        private class sorter : IComparer<Tuple<float, float>>
         {
             public int Compare(Tuple<float,float> x, Tuple<float, float> y)
             {
@@ -145,7 +148,6 @@ namespace diaryBook
         }
         public void divide(Tuple<float,float> ori, float midX, float midY,List<Tuple<float,float>> target)
         {
-
             if (Math.Abs( midX) < 2 && Math.Abs( midY) < 2)
                 return;
 
@@ -154,13 +156,13 @@ namespace diaryBook
             target.Add(new Tuple<float, float>(ori.Item1 + X, ori.Item2 + Y));
             divide(ori, X, Y,target);
             divide(new Tuple<float, float>(ori.Item1 + X, ori.Item2 + Y), X, Y, target);
-
         }
+        #endregion
+
 
         public ColorDialog colorPic { get; set; } = new ColorDialog();
-        private void toolStripButton2_Click(object sender, EventArgs e)
+        private void colorPicButton(object sender, EventArgs e)
         {
-            
             if (colorPic.ShowDialog() == DialogResult.OK)
             {
                 myPen = new Pen(colorPic.Color);
@@ -170,7 +172,7 @@ namespace diaryBook
         public SaveFileDialog saver { get; set; } = new SaveFileDialog();
         public bool stared { get; set; } = true;
 
-        private void toolStripButton3_Click(object sender, EventArgs e)
+        private void saveButton(object sender, EventArgs e)
         {
             if (saver.FileName.Length == 0 || ModifierKeys == Keys.Shift)
             {
@@ -181,6 +183,9 @@ namespace diaryBook
                 if (saver.ShowDialog() == DialogResult.OK &&
                    saver.FileName.Length > 0)
                 {
+                    string fileName = saver.FileName.Substring(saver.FileName.LastIndexOf('/') + 1);
+                    thisFile = new displayItem(fileName, DateTime.Now, "drawing", saver.FileName);
+                    tempData.store.Add(thisFile);
                     // Save the contents of the RichTextBox into the file.
                     drawing.Save(saver.FileName);
                     this.Text = saver.FileName;
@@ -195,46 +200,18 @@ namespace diaryBook
             }
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        private void penButton(object sender, EventArgs e)
         {
             penMode = true;
             sizeB.Enabled = true;
         }
 
-        private void toolStripButton4_Click(object sender, EventArgs e)
+        private void brushButton(object sender, EventArgs e)
         {
             penMode = false;
             sizeB.Enabled = false;
         }
 
-        private void board_Paint(object sender, PaintEventArgs e)
-        {
-            //if (canDraw)
-            //{
-            //    var p = board.PointToClient(board.Location);
-            //    var cur = (new Point(MousePosition.X-p.X,MousePosition.Y-p.Y));
-            //    label1.Text = cur.X + "" + cur.Y;
-            //    path.Add(cur);
-
-            //    if (path.Count < 2)
-            //        return;
-            //    Console.WriteLine(path.Count);
-            //    Graphics g = Graphics.FromImage(drawing);
-            //    if (penMode)
-            //    {
-            //        g.DrawLines(myPen, path.ToArray());
-
-            //    }
-            //    else
-            //    {
-            //        g.FillEllipse(brush, cur.X-2,cur.Y-2, 4, 4);
-            //    }
-
-
-
-            //    board.CreateGraphics().DrawImage(drawing, new Point(0, 0));
-            //}
-        }
 
         bool small = true;
         private void DrawForm_SizeChanged(object sender, EventArgs e)
@@ -252,6 +229,18 @@ namespace diaryBook
             {
                 small = true;
             }
+        }
+
+        private void sizeB_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void DrawForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            ((startForm)this.Owner).updateObjList();
+            tempData.serialize();
+            this.Close();
         }
     }
 }

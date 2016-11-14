@@ -7,41 +7,57 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace diaryBook
 {
-    public partial class textEdi : Form
+    public partial class TextEdi : Form
     {
         public SaveFileDialog saveFile1 { get; set; }
         public FontDialog font { get; set; } 
         public ColorDialog colorPicker { get; set; }
         public bool stared { get; set; } = true;
-        public textEdi()
+        private displayItem thisFile;
+
+        #region constructor
+        public TextEdi()
         {
             InitializeComponent();
-            // add font to fontCombox
-            //List<string> fonts = new List<string>();
-            //var fonts = comboBox1.Items;
-            font = new FontDialog();
-            colorPicker = new ColorDialog();
-            saveFile1 = new SaveFileDialog();
-            //foreach (FontFamily font in System.Drawing.FontFamily.Families)
-            //{
-            //    fonts.Add(font.Name);
-            //}
-            //comboBox1.SelectedIndex = 0;
-            //textIn.Font = new Font(textIn.Font.Name, 15, FontStyle.Regular);
-            textIn.SelectionFont = font.Font;
-            //FontDialog myFontDialog = new FontDialog();
-            //if (myFontDialog.ShowDialog() == DialogResult.OK)
-            //{
-            //    // Set the control's font.
-            //    //myDateTimePicker.Font = myFontDialog.Font;
-            //}
-
+            init();
 
         }
+        public TextEdi(displayItem file)
+        {
+            InitializeComponent();
+            this.thisFile = file;
 
+            init();
+
+            stared = false;
+            this.Text = file.filePath;
+            saveFile1.FileName = file.filePath;
+            this.textIn.LoadFile(file.filePath);
+        }
+        #endregion
+
+
+        public void init()
+        {
+            font = new FontDialog();
+            colorPicker = new ColorDialog();
+
+            saveFile1 = new SaveFileDialog();
+            saveFile1.DefaultExt = "*.rtf";
+            saveFile1.Filter = "RTF Files|*.rtf";
+            saveFile1.InitialDirectory = tempData.dataPath;
+            textIn.SelectionFont = font.Font;
+        }
+
+
+
+
+        #region event handler
         private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
         {
 
@@ -70,25 +86,6 @@ namespace diaryBook
             }
             textIn.Focus();
         }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //System.Drawing.FontConverter buf = new FontConverter();
-            //textIn.Font = (System.Drawing.Font)(buf.ConvertFromString(comboBox1.SelectedText));
-            //Console.WriteLine(comboBox1.SelectedItem.ToString());
-            //try {
-            //    var buf = new Font(comboBox1.SelectedItem.ToString(), textIn.Font.Size, textIn.Font.Style);
-
-            //    textIn.SelectionFont = buf;
-
-            //}
-            //catch (Exception)
-            //{
-
-            //}
-            //textIn.Refresh();
-        }
-
         private void underline_Click(object sender, EventArgs e)
         {
             if((font.Font.Style & FontStyle.Underline) != 0)
@@ -110,6 +107,7 @@ namespace diaryBook
         private void strikeout_click(object sender, EventArgs e)
         {
             //var pos = textIn.SelectionStart;
+            //textIn.LoadFile()
             if ((font.Font.Style & FontStyle.Strikeout) != 0)
             {
                 font.Font = new Font(font.Font.Name, font.Font.Size, font.Font.Style - 8);
@@ -151,15 +149,18 @@ namespace diaryBook
             // Initialize the SaveFileDialog to specify the RTF extention for the file.
             if (saveFile1.FileName.Length == 0||ModifierKeys==Keys.Shift)
             {
-                saveFile1.DefaultExt = "*.rtf";
-                saveFile1.Filter = "RTF Files|*.rtf";
-
+                
                 // Determine whether the user selected a file name from the saveFileDialog. 
                 if (saveFile1.ShowDialog() == System.Windows.Forms.DialogResult.OK &&
                    saveFile1.FileName.Length > 0)
                 {
                     // Save the contents of the RichTextBox into the file.
                     textIn.SaveFile(saveFile1.FileName);
+
+                    string fileName = saveFile1.FileName.Substring(saveFile1.FileName.LastIndexOf('/') + 1);
+                    thisFile = new displayItem(fileName, DateTime.Now, "text", saveFile1.FileName);
+                    tempData.store.Add(thisFile);
+                    // title manange
                     this.Text = saveFile1.FileName;
                     stared = false;
                 }
@@ -170,6 +171,7 @@ namespace diaryBook
                 this.Text = saveFile1.FileName;
                 stared = false;
 
+                thisFile.time = DateTime.Now; // update edit time
             }
             //if(ModifierKeys)
             textIn.Focus();
@@ -199,16 +201,12 @@ namespace diaryBook
 
         }
 
-        public bool canClose { get; set; } = true;
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            if (canClose)
-                this.Close();
-        }
+
 
 
         public bool move { get; set; }
         public Point mousePos { get; set; }
+
         private void headerPanel_MouseDown(object sender, MouseEventArgs e)
         {
             move = true;
@@ -229,6 +227,22 @@ namespace diaryBook
         private void headerPanel_MouseUp(object sender, MouseEventArgs e)
         {
             move = false;
+        }
+        #endregion
+
+        public bool canClose { get; set; } = true;
+        private void TextEdi_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (canClose)
+            {
+                ((startForm)this.Owner).updateObjList();
+                tempData.serialize();
+                this.Close();
+            }
+            else
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

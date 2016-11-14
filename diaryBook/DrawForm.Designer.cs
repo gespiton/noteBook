@@ -66,7 +66,7 @@
             this.penB.Name = "penB";
             this.penB.Size = new System.Drawing.Size(42, 44);
             this.penB.Text = "toolStripButton1";
-            this.penB.Click += new System.EventHandler(this.toolStripButton1_Click);
+            this.penB.Click += new System.EventHandler(this.penButton);
             // 
             // sizeB
             // 
@@ -76,6 +76,7 @@
             this.sizeB.Name = "sizeB";
             this.sizeB.Size = new System.Drawing.Size(42, 44);
             this.sizeB.Text = "toolStripButton5";
+            this.sizeB.Click += new System.EventHandler(this.sizeB_Click);
             // 
             // brushB
             // 
@@ -85,7 +86,7 @@
             this.brushB.Name = "brushB";
             this.brushB.Size = new System.Drawing.Size(42, 44);
             this.brushB.Text = "toolStripButton4";
-            this.brushB.Click += new System.EventHandler(this.toolStripButton4_Click);
+            this.brushB.Click += new System.EventHandler(this.brushButton);
             // 
             // colorPB
             // 
@@ -95,7 +96,7 @@
             this.colorPB.Name = "colorPB";
             this.colorPB.Size = new System.Drawing.Size(42, 44);
             this.colorPB.Text = "toolStripButton2";
-            this.colorPB.Click += new System.EventHandler(this.toolStripButton2_Click);
+            this.colorPB.Click += new System.EventHandler(this.colorPicButton);
             // 
             // saveB
             // 
@@ -105,7 +106,7 @@
             this.saveB.Name = "saveB";
             this.saveB.Size = new System.Drawing.Size(42, 44);
             this.saveB.Text = "toolStripButton3";
-            this.saveB.Click += new System.EventHandler(this.toolStripButton3_Click);
+            this.saveB.Click += new System.EventHandler(this.saveButton);
             // 
             // board
             // 
@@ -115,7 +116,6 @@
             this.board.Name = "board";
             this.board.Size = new System.Drawing.Size(787, 654);
             this.board.TabIndex = 1;
-            this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
             this.board.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.board.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.board.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);
@@ -130,6 +130,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "DrawForm";
             this.Text = "rawForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DrawForm_FormClosing);
             this.SizeChanged += new System.EventHandler(this.DrawForm_SizeChanged);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
