@@ -45,6 +45,8 @@ namespace diaryBook
         public void init()
         {
             font = new FontDialog();
+            font.Font = new Font(font.Font.Name, 15, FontStyle.Regular);
+
             colorPicker = new ColorDialog();
 
             saveFile1 = new SaveFileDialog();
@@ -231,13 +233,21 @@ namespace diaryBook
         #endregion
 
         public bool canClose { get; set; } = true;
+        private bool closing = true;               // WHAT THE FUCK!!!!!
         private void TextEdi_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (canClose)
             {
-                ((startForm)this.Owner).updateObjList();
-                tempData.serialize();
-                this.Close();
+                if (closing)
+                {
+                    closing = false;
+                    ((startForm)this.Owner).updateObjList();
+                    tempData.serialize();
+                    this.Hide();
+                    //MessageBox.Show(Application.OpenForms.Count.ToString());
+                    this.Owner.BringToFront();
+                    ((startForm)this.Owner).closeForm(this,"");
+                }
             }
             else
             {

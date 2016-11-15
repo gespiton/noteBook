@@ -22,13 +22,16 @@ namespace diaryBook
         public startForm()
         {
             InitializeComponent();
+
             defaultFolder = @"D:\noteBook\";
             data = @"D:\noteBook\_data";
-            MessageBox.Show(tempData.store.Count.ToString());
             tempData.init(defaultFolder);
             loadData();                                        // initialize tempData.store
             initializeList();                                  // build objlistview        
+            //Thread t = new Thread(new ThreadStart(closeForm));
+            //t.Start();
         }
+
         private void loadData()       
         {
             if (File.Exists(data))
@@ -38,12 +41,21 @@ namespace diaryBook
                 {
                     string s = File.ReadAllText(data);
                     //var a = JsonConvert.DeserializeObject(data);
+                    
                     var buf = JsonConvert.DeserializeObject<List<displayItem>>(s);
-                    tempData.store = buf;
+                    if (buf!=null)
+                    {
+                        tempData.store = buf;
+                    }
+                    else
+                    {
+                        tempData.store = new List<displayItem>();
+                    }
 
                 }catch(Exception ex)
                 {
                     //tempData.store = new List<Tuple<DateTime, string>>();
+                    tempData.store = new List<displayItem>();
                 }
 
                 //foreach(var i in tempData.store)
@@ -57,7 +69,7 @@ namespace diaryBook
                 //MessageBox.Show("didn't find data");
                 Directory.CreateDirectory(defaultFolder);
                 File.Create(data);
-                tempData.store = null; 
+                tempData.store = new List<displayItem>(); 
                 /// didn't find the stored data 
             }
         }
@@ -265,10 +277,13 @@ namespace diaryBook
             MessageBox.Show(sender.ToString());
         }
 
+
+
+        //public Dictionary<Form, bool> formMag { get; set; } = new Dictionary<Form, bool>();
         private void fileList_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             //var item = fileList.GetItemAt(e.X, e.Y);
-            var item=fileList.GetItemAt(e.X, e.Y);
+            var item = fileList.GetItemAt(e.X, e.Y);
             //MessageBox.Show(fileList.Items.IndexOf(item).ToString());
             int index = fileList.Items.IndexOf(item);
             //string fileName = item.SubItems[0].Text.Substring(item.SubItems[0].Text.LastIndexOf('/') + 1);
@@ -276,11 +291,31 @@ namespace diaryBook
             //{
             //MessageBox.Show(i.ToString());
             //}
-
-            TextEdi textEdi = new TextEdi(tempData.store[index]);
-            textEdi.Owner = this;
-            textEdi.Show();
+            if (tempData.store[index].type == "text")
+            {
+                TextEdi textEdi = new TextEdi(tempData.store[index]);
+                textEdi.Owner = this;
+                //formMag.Add(textEdi, false);
+                textEdi.Show();
+            }
+            else
+            {
+                DrawForm drawing = new DrawForm(tempData.store[index]);
+                drawing.Owner = this;
+                drawing.Show();
+            }
         }
+        public void closeForm(Form f,string buf)
+        {
+            f.Close();
+            Thread.Sleep(1000);
+            if (buf != "")
+            {
+                File.Delete(buf);
+            }
+
+        }
+        
 
     }
 

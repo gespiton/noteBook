@@ -116,6 +116,7 @@
             this.board.Name = "board";
             this.board.Size = new System.Drawing.Size(787, 654);
             this.board.TabIndex = 1;
+            this.board.Paint += new System.Windows.Forms.PaintEventHandler(this.board_Paint);
             this.board.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseDown);
             this.board.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseMove);
             this.board.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panel1_MouseUp);

@@ -156,6 +156,7 @@
             // siderHeadPanel
             // 
             this.siderHeadPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(128)))));
+            this.siderHeadPanel.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("siderHeadPanel.BackgroundImage")));
             this.siderHeadPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.siderHeadPanel.Location = new System.Drawing.Point(0, 0);
             this.siderHeadPanel.Name = "siderHeadPanel";
@@ -164,7 +165,7 @@
             // 
             // headerPanel
             // 
-            this.headerPanel.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.headerPanel.BackColor = System.Drawing.Color.LightGray;
             this.headerPanel.Controls.Add(this.closeButton);
             this.headerPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.headerPanel.Location = new System.Drawing.Point(255, 0);
@@ -177,7 +178,7 @@
             // 
             // closeButton
             // 
-            this.closeButton.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.closeButton.BackColor = System.Drawing.Color.PaleTurquoise;
             this.closeButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("closeButton.BackgroundImage")));
             this.closeButton.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.closeButton.Location = new System.Drawing.Point(773, 1);
@@ -192,6 +193,7 @@
             // 
             // panel1
             // 
+            this.panel1.BackColor = System.Drawing.Color.FloralWhite;
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(255, 57);
             this.panel1.Name = "panel1";
@@ -212,6 +214,7 @@
             this.fileList.AllColumns.Add(this.olvColumn1);
             this.fileList.AllColumns.Add(this.olvColumn2);
             this.fileList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(250)))), ((int)(((byte)(244)))));
+            this.fileList.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.fileList.CellEditUseWholeCell = false;
             this.fileList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.olvColumn1,

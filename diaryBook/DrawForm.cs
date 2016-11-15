@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace diaryBook
 {
@@ -19,6 +20,18 @@ namespace diaryBook
             InitializeComponent();
             init();
         }
+        public DrawForm(displayItem file)
+        {
+
+            // bug: load big picture
+            InitializeComponent();
+            init();
+            thisFile = file;
+            saver.FileName = file.filePath;
+
+            
+        }
+
 
         private void init()
         {
@@ -26,19 +39,6 @@ namespace diaryBook
             this.Text = "Untiled*";
         }
 
-
-        private void panel1_Paint(object sender, PaintEventArgs e)
-        {
-            //Graphics myGraphics = panel1.CreateGraphics();
-            //panel1.BringToFront();
-            ////myGraphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-            ////var myPen = new Brushes();
-            //Bitmap my = new Bitmap(@"D:\我的文档\Pictures\carina-nebula-3840x2400-wide-wallpapers.net.jpg");
-            //myGraphics.DrawRectangle(Pens.Red, 0, 0, 600, 40);
-            ////this.CreateGraphics().DrawRectangle(Pens.Red, 0, 0, 500, 500);
-            ////myGraphics.DrawImage(my, new PointF(0, 0));
-            ////panel1.CreateGraphics().DrawRectangle(myPen, 0, 0, 300, 300);
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -113,6 +113,7 @@ namespace diaryBook
                 path.RemoveRange(0, path.Count - 2);
 
                 board.CreateGraphics().DrawImage(drawing, new Point(0, 0));
+                g.Dispose();
             }
         }
         public void fillGap(List<PointF> path)
@@ -187,6 +188,10 @@ namespace diaryBook
                     thisFile = new displayItem(fileName, DateTime.Now, "drawing", saver.FileName);
                     tempData.store.Add(thisFile);
                     // Save the contents of the RichTextBox into the file.
+                    if (File.Exists(saver.FileName))
+                    {
+                        File.Delete(saver.FileName);
+                    }
                     drawing.Save(saver.FileName);
                     this.Text = saver.FileName;
                     stared = false;
@@ -194,9 +199,15 @@ namespace diaryBook
             }
             else
             {
+                
+                if (File.Exists(saver.FileName))
+                {
+                    File.Delete(saver.FileName);
+                }
                 drawing.Save(saver.FileName);
                 this.Text = saver.FileName;
                 stared = false;
+
             }
         }
 
@@ -236,11 +247,55 @@ namespace diaryBook
 
         }
 
+        private bool canClose = true;
+        private bool closing = true;               // WHAT THE FUCK!!!!!
         private void DrawForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ((startForm)this.Owner).updateObjList();
-            tempData.serialize();
-            this.Close();
+            if (canClose)
+            {
+                if (closing)
+                {
+                    closing = false;
+                    ((startForm)this.Owner).updateObjList();
+                    tempData.serialize();
+                    this.Hide();
+                    this.Owner.BringToFront();
+                    //MessageBox.Show(Application.OpenForms.Count.ToString());
+                    drawing.Dispose();
+                    File.Delete(this.thisFile.filePath + '_');
+                    ((startForm)this.Owner).closeForm(this,"");
+                }
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
+
+
+        private bool firsTime = true;
+        private void board_Paint(object sender, PaintEventArgs e)
+        {
+            if (firsTime)
+            {
+                firsTime = false;
+                if (thisFile != null)
+                {
+                    if (thisFile.filePath!="")
+                    {
+                        File.Copy(thisFile.filePath, thisFile.filePath + '_');
+                        var bufDrawing = new Bitmap(thisFile.filePath+'_');
+                        board.CreateGraphics().DrawImage(bufDrawing, new Point(0, 0));
+
+                        Graphics g = Graphics.FromImage(drawing);
+                        g.DrawImage(bufDrawing,new Point(0,0));
+
+                        g.Dispose();
+                        bufDrawing.Dispose();
+                    }
+                }
+
+            }
         }
     }
 }
