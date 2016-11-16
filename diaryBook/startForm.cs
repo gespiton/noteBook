@@ -308,12 +308,6 @@ namespace diaryBook
         public void closeForm(Form f,string buf)
         {
             f.Close();
-            Thread.Sleep(1000);
-            if (buf != "")
-            {
-                File.Delete(buf);
-            }
-
         }
         
 

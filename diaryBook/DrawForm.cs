@@ -36,6 +36,7 @@ namespace diaryBook
         private void init()
         {
             drawing = new Bitmap(board.Width, board.Height);
+            saver.InitialDirectory = tempData.dataPath;
             this.Text = "Untiled*";
         }
 
@@ -227,7 +228,7 @@ namespace diaryBook
         bool small = true;
         private void DrawForm_SizeChanged(object sender, EventArgs e)
         {
-            if (small)
+            if (small&&drawing !=null)
             {
                 Bitmap buf = new Bitmap(board.Size.Width, board.Size.Height);
                 Graphics g = Graphics.FromImage(buf);
@@ -262,7 +263,8 @@ namespace diaryBook
                     this.Owner.BringToFront();
                     //MessageBox.Show(Application.OpenForms.Count.ToString());
                     drawing.Dispose();
-                    File.Delete(this.thisFile.filePath + '_');
+                    if (thisFile!=null&&File.Exists(thisFile.filePath+'_'))
+                        File.Delete(this.thisFile.filePath + '_');
                     ((startForm)this.Owner).closeForm(this,"");
                 }
             }

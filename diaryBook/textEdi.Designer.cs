@@ -173,6 +173,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MinimumSize = new System.Drawing.Size(850, 699);
             this.Name = "TextEdi";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Untitled*";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TextEdi_FormClosing);
             this.tableLayoutPanel1.ResumeLayout(false);
